@@ -7,5 +7,6 @@ Motion::Project::App.setup do |app|
   app.name = 'RACMotionSignupDemo'
   app.deployment_target = '5.1'
   app.info_plist.update('UIMainStoryboardFile' => 'MainStoryboard_iPhone', 'UIMainStoryboardFile~ipad' => 'MainStoryboard_iPad')
-  app.vendor_project 'vendor/ReactiveCocoa/ReactiveCocoaFramework', :xcode, target: 'ReactiveCocoa-iOS', headers_dir: 'ReactiveCocoa'
+  app.vendor_project('vendor/ReactiveCocoa/ReactiveCocoaFramework', :xcode, target: 'ReactiveCocoa-iOS', configuration: 'Debug', headers_dir: 'ReactiveCocoa')
+  app.vendor_project('vendor/ReactiveMotion', :static, cflags: '-I../ReactiveCocoa/ReactiveCocoaFramework')
 end

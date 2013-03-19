@@ -1,5 +1,6 @@
 .repl_history
 build
+build-iPhone*
 tags
 app/pixate_code.rb
 resources/*.nib
