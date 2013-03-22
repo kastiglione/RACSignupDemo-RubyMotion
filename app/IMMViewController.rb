@@ -59,19 +59,12 @@ class IMMViewController < UIViewController
     end
 
     # Submission ends when the user clicks the button and then executing stops.
-    submissionEnded = submit.mapReplace(executing).latest.filter! do |processing|
-      !processing
-    end
-
     # The submit count increments after submission has ended.
-    submitCount = submissionEnded.reduce!(0) do |running, _|
-      running + 1
-    end
-
     # Status label is hidden until after we've had a submission complete.
-    rac.statusLabel.hidden = submitCount.startWith(0).map! do |count|
-      count < 1
-    end
+    rac.statusLabel.hidden = submit.mapReplace(executing).latest
+      .filter! { |processing| !processing }
+      .reduce!(0) { |running, _| running + 1 }
+      .startWith(0).map! { |count| count < 1 }
 
     # Derive the status label's text and color from our network result.
     rac.statusLabel.text = networkResults.flip_flop('All good!', 'An error occurred!')
