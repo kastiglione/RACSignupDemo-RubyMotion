@@ -55,7 +55,7 @@ class IMMViewController < UIViewController
 
     %w[firstNameField lastNameField emailField reEmailField].each do |field|
       rac.key(field).textColor = executing.flip_flop(UIColor.lightGrayColor, UIColor.blackColor)
-      rac.key(field).enabled = executing.negate
+      rac.key(field).enabled = executing.not
     end
 
     # Submission ends when the user clicks the button and then executing stops.
@@ -143,11 +143,6 @@ class RACSignal
     map! do |truth|
       truth ? trueValue : falseValue
     end
-  end
-
-  # If possible, this would overload the ! operator. A RubyMotion bug has been filed.
-  def negate
-    map! { |truth| !truth }
   end
 end
 
