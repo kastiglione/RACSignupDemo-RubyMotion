@@ -20,8 +20,8 @@ class IMMViewController < UIViewController
     @doNetworkStuff = RACCommand.commandWithCanExecuteSignal(formValid)
     networkResults = @doNetworkStuff.add_signal { |_|
       # Wait 3 seconds and then send a random YES/NO.
-      RACSignal.interval(3).take(1).sequenceMany -> do
-        RACSignal.return(rand(2).to_bool)
+      RACSignal.interval(3).first.map! do |_|
+        rand(2).to_bool
       end
     }.latest.boolean.main_thread
 
@@ -64,7 +64,7 @@ class IMMViewController < UIViewController
     end
 
     # The submit count increments after submission has ended.
-    submitCount = submissionEnded.scanWithStart 0, combine: ->(running, _) do
+    submitCount = submissionEnded.reduce!(0) do |running, _|
       running + 1
     end
 
@@ -126,6 +126,15 @@ class RACSignal
 
   def add_signal(&block)
     addSignalBlock(block)
+  end
+
+  def reduce!(initial, &block)
+    scanWithStart(initial, combine: block)
+  end
+  alias_method :inject!, :reduce!
+
+  def first
+    take(1)
   end
 
   def main_thread
